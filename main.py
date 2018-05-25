@@ -13,6 +13,11 @@ p20 = instruments.Pipette(axis='b',
                           max_volume=20,
                           tip_racks=[t10],
                           trash_container=trash)
+p50 = instruments.Pipette(axis='a',
+                          max_volume=50,
+                          tip_racks=[t10],
+                          trash_container=trash,
+                          channels=8)
 
 # Transfer 15ul of mastermix to all 96 wells on the plate
 mastermix = containers.load('tube-rack-2ml', 'A2')
@@ -27,7 +32,7 @@ def main(tip_start_col='A', mix_loc='A1'):
     for tip in t10.cols(tip_start_col):
         p20.pick_up_tip(tip)
 
-        for well in samples.rows(current_row):
+        for well in plate.rows(current_row):
             p20.move_to(mastermix[mix_loc])
             p20.mix(2, 7.5)
             p20.aspirate(7.5, mastermix.wells(mix_loc))
@@ -37,7 +42,10 @@ def main(tip_start_col='A', mix_loc='A1'):
         # trash our tip to associated trash container
         p20.drop_tip()
     # Step 2. Load our sample.
-    p20.delay()
+    # p20.delay()
+
+    for row in samples.rows()
+    p50.pick_up_tip(t10.rows(0))
 
     for c in robot.commands():
         print(c)
