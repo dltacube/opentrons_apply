@@ -44,7 +44,6 @@ def main(tip_start_col='A', mix_loc='A1'):
     # Step 2. Load our sample.
     # p20.delay()
 
-    for row in samples.rows()
     p50.pick_up_tip(t10.rows(0))
 
     for c in robot.commands():
