@@ -37,6 +37,7 @@ def print_history():
 
 def main(tip_start_col='A', mix_loc='A1', sample_range=list(range(1, 11))):
     # Step 1. Load the mastermix
+
     # Which column should the robot take tips from?
     tip_column = t100[tip_start_col]
     # Location of Sybr green tube in our tube rack (A1 by default)
@@ -49,15 +50,16 @@ def main(tip_start_col='A', mix_loc='A1', sample_range=list(range(1, 11))):
         p100.pick_up_tip(tip)
         # This loop runs once for every well in the current row of our destination plate, going from A1...H1
         for well in plate.rows(current_row):
-            p100.move_to(sybr_pos)
-            # We start out by priming the tip with our Sybr Green solution
-            empty_volume = 100 - p100.current_volume
-            p100.mix(2, empty_volume)
-            # This ensures that the tip is always at capacity.
-            p100.aspirate(empty_volume, sybr_pos)
-            # print(p100.current_volume)
-            # .bottom(3) specifies that dispensing should occur 3mm from the bottom of the well
-            p100.dispense(15, well.bottom(3))
+            # check to be sure
+            if current_row in sample_range:
+                p100.move_to(sybr_pos)
+                # We start out by priming the tip with our Sybr Green solution
+                empty_volume = 100 - p100.current_volume
+                p100.mix(2, empty_volume)
+                # This ensures that the tip is always at capacity.
+                p100.aspirate(empty_volume, sybr_pos)
+                # .bottom(3) specifies that dispensing should occur 3mm from the bottom of the well
+                p100.dispense(15, well.bottom(3))
 
         current_row += 1
         p100.dispense(p100.current_volume, sybr_pos)
@@ -69,7 +71,8 @@ def main(tip_start_col='A', mix_loc='A1', sample_range=list(range(1, 11))):
     # Sybr green should be refrigerated and samples set on C1
     p100.delay(minutes=15)
 
-    # Step 2. Load our sample.
+    # Step 2. Load our sample
+
     # Here we iterate by row (i.e.: A1...H1) and transfer 5uL x8 of sample to our destination plate w/ Sybr green
     for tip_row, sample_row, dest_row in zip(t10.rows, samples.rows(sample_range), plate.rows(1, to=10)):
         p50.pick_up_tip(tip_row)
